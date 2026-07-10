@@ -137,6 +137,69 @@ async finalizeRegistration (candidateId){
     return updated;
 }
 
+// ── Queries ────────────────────────────────────────────────────
+  async findById (id) {
+    const c = await Candidate.findById(id).populate('examCenter');
+    if (!c) throw new AppError('Candidate not found', 404);
+    return c;
+  }
+
+  async findByRegNumber (regNumber) {
+    const c = await Candidate.findOne({ registrationNumber: regNumber.toUpperCase() })
+      .populate('examCenter');
+    if (!c) throw new AppError('Registration number not found', 404);
+    return c;
+  }
+
+  async search ({ query, state, status, year, page = 1, limit = 20 }) {
+    const filter = { examYear: year || parseInt(process.env.EXAM_YEAR) };
+    if (state)  filter.stateOfOrigin       = state;
+    if (status) filter.registrationStatus  = status;
+    if (query) {
+      filter.$or = [
+        { registrationNumber: new RegExp(query, 'i') },
+        { email:              new RegExp(query, 'i') },
+        { firstName:          new RegExp(query, 'i') },
+        { lastName:           new RegExp(query, 'i') },
+        { phone:              new RegExp(query, 'i') },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      Candidate.find(filter)
+        .select('-password -emailVerifyToken')
+        .populate('examCenter', 'name centerCode state')
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Candidate.countDocuments(filter),
+    ]);
+
+    return { data, total, page, limit };
+  }
+
+  async getStats (examYear) {
+    const year = examYear || parseInt(process.env.EXAM_YEAR);
+    const [statusBreakdown, stateBreakdown, genderBreakdown, total] = await Promise.all([
+      Candidate.aggregate([
+        { $match: { examYear: year } },
+        { $group: { _id: '$registrationStatus', count: { $sum: 1 } } },
+      ]),
+      Candidate.aggregate([
+        { $match: { examYear: year } },
+        { $group: { _id: '$stateOfOrigin', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+      ]),
+      Candidate.aggregate([
+        { $match: { examYear: year } },
+        { $group: { _id: '$gender', count: { $sum: 1 } } },
+      ]),
+      Candidate.countDocuments({ examYear: year }),
+    ]);
+
+    return { total, statusBreakdown, stateBreakdown, genderBreakdown };
+  }
+
 }
 
 module.exports = new CandidateService();
