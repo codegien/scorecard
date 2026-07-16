@@ -2,6 +2,7 @@ const { REGISTRATION_STATUS, COMPULSORY_SUBJECT } = require('../config/constants
 const Candidate = require('../models/Candidate.model');
 const ExamCenter = require('../models/ExamCenter.model');
 const AppError = require('../utils/AppError');
+const { generateRegNumber } = require('../utils/generateRegNumber');
 
 class CandidateService {
     //-- Step 1: Initiation of registration
@@ -123,7 +124,10 @@ async finalizeRegistration (candidateId){
         throw new AppError('Registration is already completed', 400);
     }
 
-    const registrationNumber =  `HE-${new Date()}`
+    const registrationNumber =  await generateRegNumber(
+        candidate.stateOfOrigin, 
+        candidate.gender,
+    );
     const updated = await Candidate.findByIdAndUpdate(
         candidateId,
         {

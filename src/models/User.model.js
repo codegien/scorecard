@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: Object.values(ROLES),
-        default: ROLES.ADMIN,
+        default: ROLES.SUPER_ADMIN,
     },
     isActive: {type: Boolean, default: true},
     lastLogin: Date,

@@ -9,6 +9,7 @@ app.use(express.json());
 connectDB();
 
 app.use('/api/v1/auth', authRouter )
+
 app.listen(PORT, ()=>{
     console.log(`Score Card Server running on http://localhost:${PORT}`)
 })
