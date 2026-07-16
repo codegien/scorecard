@@ -1,6 +1,7 @@
 const User = require('../models/User.model');
 const api  = require('../utils/apiResponse')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const AppError = require('../utils/AppError');
 //reg
 
 const signToken = (id)=> jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
@@ -21,6 +22,26 @@ exports.register = async (req, res, next)=> {
     }
 }
 //login - sign jwt
+exports.login = async (req, res, next) => {
+    try{
+        const {email, password} = req.body;
+        if (!email || ! password) return next(new AppError('Email and password are required',400));
+        const user = await User.findOne({email}).select('+password');
+        if(!user || !(user.comparePassword(password))){
+            return next(new AppError('Invalid email or passwor', 401));
+        }
+
+        if (!user.isActive) return next(new AppError('Acccount deactivated. Contact support.', 401));
+         await User.findByIdAndUpdate(user._id, { lastLogin: new Date() });
+
+         const token = signToken(user._id, {lastLogin: new Date()});
+
+         const {password: _, user: ...userData} = user.toJSON();
+         api.success(res, {token, user: userData}, 'Login successful');
+    }catch(err){
+        next(err);
+    }
+}
 //getprofile
 //change password
 //logout
