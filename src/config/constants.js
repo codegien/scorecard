@@ -32,7 +32,7 @@ module.exports = {
   // ── Registration number format ─────────────────────────────────
   // Format: YEAR + STATE_CODE (2 chars) + RANDOM_6_DIGITS
   // e.g.  2025LA2018456
-  REG_NUMBER_PREFIX: process.env.EXAM_YEAR || '2025',
+  REG_NUMBER_PREFIX: process.env.EXAM_YEAR || '2026',
 
   // ── Nigerian states ────────────────────────────────────────────
   STATES: [

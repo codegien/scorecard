@@ -7,17 +7,17 @@ const Candidate = require('../models/Candidate.model');
  * Example: 2025LA M123456  →  2025LAM123456
  */
 const generateRegNumber = async (state, gender) => {
-  const year      = REG_NUMBER_PREFIX;
-  const stateCode = STATE_CODES[state] || 'FC';
-  const genderChar= gender === 'Female' ? 'F' : 'M';
+  const year      = REG_NUMBER_PREFIX; //2026
+  const stateCode = STATE_CODES[state] || 'FC';  //LA
+  const genderChar= gender === 'Female' ? 'F' : 'M'; //F
 
   let regNumber;
   let isUnique = false;
   let attempts = 0;
 
   while (!isUnique && attempts < 10) {
-    const random = Math.floor(100000 + Math.random() * 900000); // 6-digit
-    regNumber    = `${year}${stateCode}${genderChar}${random}`;
+    const random = Math.floor(100000 + Math.random() * 900000); // 6-digit //550000
+    regNumber    = `${year}${stateCode}${genderChar}${random}`; //2026LAF550000
     const exists = await Candidate.findOne({ registrationNumber: regNumber });
     if (!exists) isUnique = true;
     attempts++;
