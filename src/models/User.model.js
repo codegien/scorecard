@@ -44,9 +44,12 @@ userSchema.methods.comparePassword = async function (candidate){
     return bcrypt.compare(candidate, this.password);
 };
 
-// userSchema.methods.changedPasswordAfter = function (jwtTimestamp) {
-//     if()
-// } 
+userSchema.methods.changedPasswordAfter = function (jwtTimestamp) {
+    if(this.passwordChangeAt){
+        return parseInt(this.passwordChangeAt.getTime() / 1000, 10)> jwtTimestamp
+    }
+    return false;
+} 
 
 
 userSchema.set('toJSON', {

@@ -36,12 +36,41 @@ exports.login = async (req, res, next) => {
 
          const token = signToken(user._id, {lastLogin: new Date()});
 
-         const {password: _, user: ...userData} = user.toJSON();
+         const {password: _, ...userData} = user.toJSON();
          api.success(res, {token, user: userData}, 'Login successful');
     }catch(err){
         next(err);
     }
 }
 //getprofile
+exports.getMe = async (req,  res, next) => {
+    try{
+        const user = await User.findById(req.user.id);
+        api.success(res, {user}, 'Profile retrieved' )
+    }catch(err){
+        next(err);
+    }
+}
+
 //change password
+exports.changePassword = async (req, res, next) => {
+    try{
+        const { currentPassword, newPassword} = req.body;
+        const user = await User.findById(req.user.id).select('+password');
+
+        if(!(await user.comparePassword(currentPassword))) {
+            return next(new AppError('Current password is incorrect', 400));
+        }
+
+        user.password           = newPassword;
+        user.passwordChangeAt   = new Date();
+        await user.save();
+
+        api.success(res, {}, 'Password changed successfully');
+    }catch(err){
+        next(err);
+    }
+}
+
+
 //logout

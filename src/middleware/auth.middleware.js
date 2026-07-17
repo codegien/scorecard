@@ -8,7 +8,7 @@ const {ROLES} = require('../config/constants');
 const protect = async (req, res, next ) => {
     try {
         const auth = req.headers.authorization;
-        if(!auth?.startWith('Bearer')){
+        if(!auth?.startsWith('Bearer')){
             return next(new AppError('Not authenticated. Please log in.', 401));
         }
 
