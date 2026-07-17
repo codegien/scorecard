@@ -20,7 +20,9 @@ const oLevelResultSchema = new mongoose.Schema({
 }, {_id:false});
 const institutionChoiceSchema = new mongoose.Schema({
     priority:           {type: Number, enum: [1, 2], required: true},
-    institutionName:    {type: String, required: true, trim: true},
+    institutionName:    {type: String, 
+        required: true, 
+        trim: true},
     institutionCode:    {type: String, required: true, trim: true, uppercase: true},
     course:             {type: String, required: true, trim: true},
     courseCode:         {type: String, required: true, trim: true, uppercase: true},
@@ -30,13 +32,13 @@ const candidateSchema = new mongoose.Schema(
     {
         firstName: {
             type:           String,
-            required:       [true, 'First name is required'],
+            // required:       [true, 'First name is required'],
             trim:           true
 
         },
         lastName: {
             type:           String,
-            required:       [true, 'Last name is required'],
+            // required:       [true, 'Last name is required'],
             trim:           true
 
         },
@@ -46,7 +48,7 @@ const candidateSchema = new mongoose.Schema(
         },
         dateOfBirth: {
             type:           Date,
-            required:       [true, 'Date of birth is required'],
+            // required:       [true, 'Date of birth is required'],
             validate: {
                 validator(v) {
                     const age = (Date.now() - v)/ (365.25 * 24 * 3600 * 1000);
@@ -57,7 +59,7 @@ const candidateSchema = new mongoose.Schema(
         },
         gender: {
             type:           String,
-            required:       [true, 'Gender is required'],
+            // required:       [true, 'Gender is required'],
             enum:           ['Male', 'Female']
         },
         nationality: {
@@ -67,17 +69,17 @@ const candidateSchema = new mongoose.Schema(
         },
         stateOfOrigin:{
             type:           String,
-            required:       true,
+            // required:       true,
             enum:           STATES
         },
         lgaOfOrigin:{
             type:           String,
-            required:       true,
+            // required:       true,
             trim:           true,
         },
         stateOfResidence:{
             type:           String,
-            required:       true,
+            // required:       true,
             enum:           STATES
         },
         email: {
@@ -102,7 +104,7 @@ const candidateSchema = new mongoose.Schema(
         examType: {
             type:           String,
             enum:           Object.values(EXAM_TYPES),
-            required:       true,
+            // required:       true,
             default:        EXAM_TYPES.UTME,
         },
         examYear: {
@@ -112,10 +114,10 @@ const candidateSchema = new mongoose.Schema(
         //instituteOfChoice
         institutionChoices: {
             type:       [institutionChoiceSchema],
-            validate: {
-                validate: (arr) => arr.length >= 1 && arr.length <=2,
-                message: 'You must choose 1 or 2 institute'
-            },
+            // validate: {
+            //     validator: (arr) => arr.length >= 1 && arr.length <=2,
+            //     message: 'You must choose 1 or 2 institute'
+            // },
         },
         //oLevelResults
         oLevelResults: [oLevelResultSchema],
@@ -210,8 +212,8 @@ candidateSchema.methods.comparePassword = async function (candidate) {
 }
 
 // ---- Lets handle indexing -------------
-candidateSchema.index({ registrationNumber: 1});
-candidateSchema.index({ email: 1});
+candidateSchema.index({ registrationNumber: true});
+candidateSchema.index({ email: true});
 candidateSchema.index({ nin: 1});
 candidateSchema.index({ phone: 1});
 candidateSchema.index({ stateOfOrigin: 1, examYear: 1});

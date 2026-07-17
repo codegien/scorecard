@@ -59,6 +59,6 @@ examCenterSchema.virtual('isFull').get(function(){
     return this.registeredCount >= this.capacity;
 });
 examCenterSchema.index({state: 1, isActive: 1});
-examCenterSchema.index({ centerCode: 1});
+examCenterSchema.index({ centerCode: true});
 
 module.exports = mongoose.model('ExamCenter', examCenterSchema);

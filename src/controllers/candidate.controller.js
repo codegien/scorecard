@@ -1,6 +1,8 @@
 const candidateService = require("../services/candidate.service")
 const api       = require('../utils/apiResponse');
 const AppError = require("../utils/AppError");
+
+///initiat reg
 exports.initiateRegistration = async (req, res, next) => {
     try{
         const candidate = await candidateService.initiateRegistration(req.body);

@@ -21,7 +21,7 @@ class CandidateService {
                 throw new (`Candidate with this ${field} already exist for this year`, 409);
         }
 
-        const profileCode = `CD-${NIN}`; //generateProfileCode()
+        const profileCode = `CD-${nin}`; //generateProfileCode()
 
         const candidate = await Candidate.create({
             ...data,
