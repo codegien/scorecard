@@ -94,20 +94,33 @@ async assignExamCenter(profileCode, centerCode){
 
 //step 4 upload passport
 
-async updatePassportPhoto(candidateId, photoData){
-    const candidate = await Candidate.findByIdAndUpdate(
-        candidateId,
-        {
-            passport: photoData,
-            'completedSteps.photoUpload': true,
-        },
-        {new: true}
-    );
-    if(!candidate) throw new Error('Candidate not found');
+// async updatePassportPhoto(candidateId, photoData){
+//     console.log("Photodata", photoData);
+//     const candidate = await Candidate.findByIdAndUpdate(
+//         candidateId,
+//         {
+//             passport: photoData,
+//             'completedSteps.photoUpload': true,
+//         },
+//         {new: true}
+//     );
+//     if(!candidate) throw new Error('Candidate not found');
 
-    return candidate;
+//     return candidate;
+// }
+
+async updatePassportPhoto (candidateId, photoData) {
+  
+  const candidate = await Candidate.findById(candidateId);
+  if (!candidate) throw new AppError('Candidate not found', 404);
+
+  candidate.passportPhoto = photoData;
+  candidate.completedSteps.photoUpload = true;
+
+  await candidate.save();
+  
+  return candidate;
 }
-
 //--step 5 -----
 async finalizeRegistration (candidateId){
     const candidate = await Candidate.findById(candidateId);

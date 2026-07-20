@@ -4,11 +4,14 @@ const connectDB = require('./src/config/database');
 const app = express();
 const authRouter = require('./src/routes/auth.routes');
 const candidateRouter = require('./src/routes/candidate.routes')
+const path = require('path')
 const PORT = 8000
 
 app.use(express.json());
 connectDB();
 
+app.use('/upload', express.static(path.join(__dirname, 'upload'))); 
+//<img src: `http://localshop.com/${candidate.passport.url}`>
 app.use('/api/v1/auth', authRouter );
 app.use('/api/v1/candidate', candidateRouter )
 
