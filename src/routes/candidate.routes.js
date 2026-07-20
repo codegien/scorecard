@@ -29,7 +29,8 @@ const upload = multer({
 })
 
 router.post('/',                candidatectrl.initiateRegistration)
-router.post('/testupload',                upload.single('photo'));
+router.post('/:id/photo',       upload.single('photo'), candidatectrl.uploadPassportPhoto)
+router.post('/testupload',                upload.single('photo'), candidatectrl.uploadPassportPhoto);
 
 
 module.exports = router;

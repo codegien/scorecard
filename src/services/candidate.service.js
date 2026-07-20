@@ -98,7 +98,7 @@ async updatePassportPhoto(candidateId, photoData){
     const candidate = await Candidate.findByIdAndUpdate(
         candidateId,
         {
-            passportPhoto: photoData,
+            passport: photoData,
             'completedSteps.photoUpload': true,
         },
         {new: true}
