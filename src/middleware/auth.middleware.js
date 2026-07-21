@@ -30,9 +30,19 @@ const protect = async (req, res, next ) => {
     if (err.name === 'TokenExpiredError')  return next(new AppError('Token expired. Please log in again.', 401));
     next(err);
   }
+};
+
+const restrictTo = (...roles) => (req, res,next) => {
+        if(!roles.includes(req.user?.role)){
+            return next(new AppError('You are not permitted to perform this operation', 403));
+        }
+        next();
 }
 
-module.exports = { protect }
+const adminOnly = restrictTo(ROLES.ADMIN, ROLES.SUPER_ADMIN);
+const superAdminOnly = restrictTo(ROLES.SUPER_ADMIN);
+
+module.exports = { protect, restrictTo, adminOnly, superAdminOnly };
 
 // const apiResponse = fetch('https://example.com', {
 //   method: 'GET',
