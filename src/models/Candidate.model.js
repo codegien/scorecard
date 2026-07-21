@@ -6,7 +6,8 @@ const {
     O_LEVEL_GRADES,
     STATES,
     EXAM_TYPES,
-    REGISTRATION_STATUS
+    REGISTRATION_STATUS,
+    COMPULSORY_SUBJECT
 } = require('../config/constants');
 //--o'level result schema
 const oLevelResultSchema = new mongoose.Schema({
@@ -110,6 +111,16 @@ const candidateSchema = new mongoose.Schema(
         examYear: {
             type:           Number,
             default:        ()=> new Date().getFullYear(),
+        },
+        //subjects
+        subjects: {
+            type: [String],
+            validate: {
+                validator(arr) {
+                    return arr.length === 4 && arr.includes(COMPULSORY_SUBJECT);
+                },
+                message: `Exactly 4 subjects requireed inclusive of "${COMPULSORY_SUBJECT}"`,
+            }
         },
         //instituteOfChoice
         institutionChoices: {

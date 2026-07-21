@@ -29,6 +29,7 @@ const upload = multer({
 })
 
 router.post('/',                candidatectrl.initiateRegistration)
+router.patch('/:id/academic',                candidatectrl.updateAcademicInfo)
 router.post('/:id/photo',       upload.single('photo'), candidatectrl.uploadPassportPhoto)
 router.post('/testupload',                upload.single('photo'), candidatectrl.uploadPassportPhoto);
 
