@@ -70,6 +70,7 @@ return candidate;
     }
 
 //step 3: Assign exam center
+
 async assignExamCenter(profileCode, centerCode){
      const center = await ExamCenter.findOne({centerCode, isActive: true});
      if(!center) throw new Error('Exam center not found or inactive');
@@ -91,6 +92,32 @@ async assignExamCenter(profileCode, centerCode){
      await ExamCenter.findByIdAndUpdate(center._id, {$inc: {registeredCount: 1}});
      return candidate;
 }
+// async assignExamCenter(profileCode, centerCode) {
+//   const cleanProfileId = typeof profileCode === 'object' && profileCode.id 
+//     ? profileCode.id 
+//     : profileCode;
+
+//   const center = await ExamCenter.findOne({ centerCode, isActive: true });
+//   if (!center) throw new Error('Exam center not found or inactive');
+//   if (center.isFull) throw new Error('Exam center is fully booked');
+
+//   const candidate = await Candidate.findByIdAndUpdate(
+//     cleanProfileId, 
+//     {
+//       examCenter: center._id,
+//       examCenterCode: center.centerCode,
+//       examCenterName: center.name,
+//       'completedSteps.centerSelection': true
+//     },
+//     { new: true }
+//   );
+
+//   if (!candidate) throw new Error('Candidate not found');
+
+//   await ExamCenter.findByIdAndUpdate(center._id, { $inc: { registeredCount: 1 } });
+  
+//   return candidate;
+// }
 
 //step 4 upload passport
 

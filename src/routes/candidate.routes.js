@@ -3,6 +3,7 @@ const multer = require('multer');
 const path     = require('path');
 const {v4: uuid} = require('uuid');
 const candidatectrl = require('../controllers/candidate.controller');
+const { protect, adminOnly } = require('../middleware/auth.middleware');
 
 
 /////file uploas(candidate passport)
@@ -28,10 +29,26 @@ const upload = multer({
 
 })
 
-router.post('/',                candidatectrl.initiateRegistration)
-router.patch('/:id/academic',                candidatectrl.updateAcademicInfo)
-router.post('/:id/photo',       upload.single('photo'), candidatectrl.uploadPassportPhoto)
+router.post('/',                candidatectrl.initiateRegistration);
+router.patch('/:id/academic',                candidatectrl.updateAcademicInfo);
+router.patch('/:id/center',     candidatectrl.assignExamCenter);
+router.post('/:id/photo',       upload.single('photo'), candidatectrl.uploadPassportPhoto);
+router.post('/:id/finalize',    candidatectrl.finalizeRegistration);
+
+
+//-------------------//
 router.post('/testupload',                upload.single('photo'), candidatectrl.uploadPassportPhoto);
 
+
+//-----------Query route (Admin)-------//
+router.get('/',     protect, adminOnly, candidatectrl.searchCandidates);
+router.get('/stats',        protect, adminOnly, candidatectrl.getRegistrationStats);
+router.get('/reg/:regNumber',   protect, adminOnly, candidatectrl.getCandidateByRegNumber)
+router.get('/:id',         protect, adminOnly, candidatectrl.getCandidate);
+router.patch('/:id',         protect, adminOnly, candidatectrl.adminUpdateCandidate);
+
+
+///--------//
+router.get('/exam-slip/:regNumber/print', candidatectrl.printExaminationSlip)
 
 module.exports = router;

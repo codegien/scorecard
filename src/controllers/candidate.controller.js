@@ -1,4 +1,5 @@
-const candidateService = require("../services/candidate.service")
+const candidateService = require("../services/candidate.service");
+const pdfService = require("../services/pdf.service");
 const api       = require('../utils/apiResponse');
 const AppError = require("../utils/AppError");
 
@@ -24,9 +25,9 @@ exports.updateAcademicInfo = async (req, res, next) => {
 
 //step 3
 
-exports.assignExamCenter = async (req,res,next)=>{
+exports.assignExamCenter = async (req, res, next)=>{
     try {
-        const candidate= await candidateService.assignExamCenter(req.params, request.body.centerCode);
+        const candidate = await candidateService.assignExamCenter(req.params.id, req.body.centerCode);
         api.success(res, {candidate}, 'Exam ceter assigned')
     } catch (err) {
         console.error(err);

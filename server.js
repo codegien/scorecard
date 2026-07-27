@@ -13,6 +13,9 @@ connectDB();
 
 app.use('/upload', express.static(path.join(__dirname, 'upload'))); 
 //<img src: `http://localshop.com/${candidate.passport.url}`>
+app.use('/api/v1/health', (req, res)=>{
+    res.send('HEALTHY');
+});
 app.use('/api/v1/auth', authRouter );
 app.use('/api/v1/candidate', candidateRouter )
 app.use('/api/v1/exam', examRouter )
