@@ -2,6 +2,7 @@ const { RESULT_STATUS } = require("../config/constants");
 const CandidateModel = require("../models/Candidate.model");
 const ResultModel = require("../models/Result.model");
 const AppError = require("../utils/AppError");
+const { generateResultToken } = require("../utils/generateRegNumber")
 
 class ResultService {
     async processResult (data, adminId) {
@@ -326,7 +327,6 @@ class ResultService {
       lastPrintedAt: new Date(),
     });
   }
-
     }
 
 module.exports = new ResultService()
