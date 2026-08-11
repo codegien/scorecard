@@ -114,4 +114,28 @@ Subjects: ${(d.candidate.subjects || []).join(', ')}
 Continue at ${portal('/register')}`,
   }),
 
+
+  //Center Ass///
+  centerAssigned: (d) => ({
+    subject: `Exam centre confirmed — ${BRAND.name}`,
+    html: layout(
+      heading('Examination centre confirmed') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph('Your examination centre has been assigned.') +
+      detailBox([
+        ['Centre',      d.candidate.examCenterName || '—'],
+        ['Centre Code', d.candidate.examCenterCode || '—'],
+      ]) +
+      infoNote('One step remains: upload your passport photograph to complete registration.') +
+      button('Continue Registration', portal('/register')),
+      { preheader: 'Your exam centre is confirmed.' }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your exam centre has been confirmed:
+${d.candidate.examCenterName} (${d.candidate.examCenterCode})
+
+Continue at ${portal('/register')}`,
+  }),
 }
