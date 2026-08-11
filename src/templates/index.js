@@ -138,4 +138,168 @@ ${d.candidate.examCenterName} (${d.candidate.examCenterCode})
 
 Continue at ${portal('/register')}`,
   }),
-}
+
+  photoUploaded: (d) => ({
+    subject: `Passport photo received — ${BRAND.name}`,
+    html: layout(
+      heading('Passport photograph received') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph('Your passport photograph has been uploaded successfully.') +
+      infoNote('You are almost done. Finalise your registration to receive your official registration number.') +
+      button('Finalise Registration', portal('/register')),
+      { preheader: 'Your passport photo was received.' }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your passport photograph has been received.
+Finalise your registration at ${portal('/register')}`,
+  }),
+
+   registrationCompleted: (d) => ({
+    subject: `Registration complete — Your number is ${d.candidate.registrationNumber}`,
+    html: layout(
+      heading('Registration complete') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph(
+        'Congratulations! Your registration is now complete. Below is your ' +
+        'official registration number — you will need it for every future step, ' +
+        'including checking your result.'
+      ) +
+      detailBox([
+        ['Registration Number', d.candidate.registrationNumber],
+        ['Full Name',           fullName(d.candidate)],
+        ['Exam Type',           d.candidate.examType],
+        ['Exam Centre',         d.candidate.examCenterName || '—'],
+        ['Exam Year',           d.candidate.examYear],
+      ]) +
+      infoNote(
+        'Write down your registration number and keep it safe. ' +
+        'You can now download and print your examination slip.'
+      ) +
+      button('Download Exam Slip', portal(`/candidates/exam-slip/${d.candidate.registrationNumber}/print`)),
+      { preheader: `Your registration number is ${d.candidate.registrationNumber}.` }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your registration is COMPLETE.
+
+Registration Number: ${d.candidate.registrationNumber}
+Exam Type: ${d.candidate.examType}
+Exam Centre: ${d.candidate.examCenterName || '—'}
+Exam Year: ${d.candidate.examYear}
+
+Keep this number safe. Download your exam slip at
+${portal(`/candidates/exam-slip/${d.candidate.registrationNumber}/print`)}`,
+  }),
+   examSlipPrinted: (d) => ({
+    subject: `Exam slip generated — ${BRAND.name}`,
+    html: layout(
+      heading('Examination slip generated') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph(
+        'Your examination slip was just generated. If this was not you, please ' +
+        'secure your account.'
+      ) +
+      detailBox([
+        ['Registration Number', d.candidate.registrationNumber],
+        ['Exam Centre',         d.candidate.examCenterName || '—'],
+        ['Generated',           d.time],
+      ]) +
+      infoNote('Remember to bring a printed copy and a valid ID to your examination centre.'),
+      { preheader: 'Your exam slip was generated.' }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your examination slip was generated at ${d.time}.
+Registration Number: ${d.candidate.registrationNumber}
+
+Bring a printed copy and valid ID to your centre.`,
+  }),
+
+
+
+  resultChecked: (d) => ({
+    subject: `Your result was accessed — ${BRAND.name}`,
+    html: layout(
+      heading('Result accessed') +
+      paragraph(`Dear ${fullName(d)},`) +
+      paragraph('Your examination result was just viewed.') +
+      detailBox([
+        ['Registration Number', d.registrationNumber],
+        ['Aggregate Score',     `${d.aggregateScore} / 400`],
+        ['Accessed',            d.time],
+      ]) +
+      infoNote(
+        'If you did not access your result, someone else may have your details. ' +
+        'Contact support.',
+        '#744210'
+      ),
+      { preheader: 'Your result was just accessed.' }
+    ),
+    text:
+`Dear ${fullName(d)},
+
+Your result was accessed at ${d.time}.
+Registration Number: ${d.registrationNumber}
+Aggregate Score: ${d.aggregateScore}/400`,
+  }),
+
+  resultSlipPrinted: (d) => ({
+    subject: `Result slip generated — ${BRAND.name}`,
+    html: layout(
+      heading('Result slip generated') +
+      paragraph(`Dear ${fullName(d)},`) +
+      paragraph('A copy of your result slip was just generated for download or printing.') +
+      detailBox([
+        ['Registration Number', d.registrationNumber],
+        ['Aggregate Score',     `${d.aggregateScore} / 400`],
+        ['Grade',               d.grade || '—'],
+        ['Generated',           d.time],
+      ]),
+      { preheader: 'Your result slip was generated.' }
+    ),
+    text:
+`Dear ${fullName(d)},
+
+Your result slip was generated at ${d.time}.
+Registration Number: ${d.registrationNumber}
+Aggregate: ${d.aggregateScore}/400  Grade: ${d.grade || '—'}`,
+  }),
+
+  resultReleased: (d) => ({
+    subject: `Your ${BRAND.name} result is now available`,
+    html: layout(
+      heading('Your result is available') +
+      paragraph(`Dear ${fullName(d)},`) +
+      paragraph(
+        'Your examination result has been released and is now available for you ' +
+        'to check.'
+      ) +
+      detailBox([
+        ['Registration Number', d.registrationNumber],
+        ['Exam Year',           d.examYear],
+      ]) +
+      infoNote('Use your registration number and date of birth, or a result checking token, to view your result.') +
+      button('Check My Result', portal('/results/check')),
+      { preheader: 'Your result has been released.' }
+    ),
+    text:
+`Dear ${fullName(d)},
+
+Your result has been released.
+Registration Number: ${d.registrationNumber}
+
+Check it at ${portal('/results/check')}`,
+  }),
+};
+
+const render = (templateName, date)=> {
+    const fn = TEMPLATE[templateName];
+    if (!fn) throw new Error(`Unknow email template: "${templateName}"`);
+    return fn(data);
+};
+
+module.exports = {render, TEMPLATE};
