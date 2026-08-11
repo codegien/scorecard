@@ -51,5 +51,39 @@ const TEMPLATE = {
           text:
         `Your ${BRAND.name} password was changed at ${d.time}.
         If this wasn't you, contact ${BRAND.supportEmail} immediately.`,
-    })
+    }),
+     registrationInitiated: (d) => ({
+    subject: `Welcome — your ${BRAND.name} registration has started`,
+    html: layout(
+      heading('Registration started') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph(
+        'Thank you for beginning your registration. Your application has been ' +
+        'created and saved. You can now continue through the remaining steps.'
+      ) +
+      detailBox([
+        ['Profile Code', d.candidate.profileCode || 'Pending'],
+        ['Email',        d.candidate.email],
+        ['Exam Year',    d.candidate.examYear],
+        ['Status',       'Registration in progress'],
+      ]) +
+      infoNote(
+        'Keep your Profile Code safe — you will use it to resume your ' +
+        'registration and to access your account.'
+      ) +
+      paragraph('The next steps are: academic details, subject selection, exam centre, and passport photo.') +
+      button('Continue Registration', portal('/register')),
+      { preheader: 'Your registration has started. Continue where you left off.' }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your ${BRAND.name} registration has started.
+
+Profile Code: ${d.candidate.profileCode || 'Pending'}
+Email: ${d.candidate.email}
+Exam Year: ${d.candidate.examYear}
+
+Keep your Profile Code safe. Continue at ${portal('/register')}`,
+  }),
 }
