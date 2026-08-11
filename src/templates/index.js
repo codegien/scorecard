@@ -86,4 +86,32 @@ Exam Year: ${d.candidate.examYear}
 
 Keep your Profile Code safe. Continue at ${portal('/register')}`,
   }),
+
+
+  //Academic Update////
+
+  academicUpdated: (d) => ({
+    subject: `Academic details saved — ${BRAND.name}`,
+    html: layout(
+      heading('Academic details saved') +
+      paragraph(`Dear ${fullName(d.candidate)},`) +
+      paragraph('Your subject combination and institution choices have been saved successfully.') +
+      detailBox([
+        ['Subjects',   (d.candidate.subjects || []).join(', ') || '—'],
+        ['1st Choice', d.candidate.institutionChoices?.[0]?.institutionName || '—'],
+        ['2nd Choice', d.candidate.institutionChoices?.[1]?.institutionName || 'Not selected'],
+      ]) +
+      infoNote('Next step: select your preferred examination centre.') +
+      button('Continue Registration', portal('/register')),
+      { preheader: 'Your academic details and subject choices are saved.' }
+    ),
+    text:
+`Dear ${fullName(d.candidate)},
+
+Your academic details have been saved.
+Subjects: ${(d.candidate.subjects || []).join(', ')}
+
+Continue at ${portal('/register')}`,
+  }),
+
 }
