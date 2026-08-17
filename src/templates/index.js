@@ -296,7 +296,7 @@ Check it at ${portal('/results/check')}`,
   }),
 };
 
-const render = (templateName, date)=> {
+const render = (templateName, data)=> {
     const fn = TEMPLATE[templateName];
     if (!fn) throw new Error(`Unknow email template: "${templateName}"`);
     return fn(data);
