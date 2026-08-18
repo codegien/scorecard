@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const EmailLog   = require('../models/EmailLog.model');
-const template = require('../templates');
+const templates = require('../templates');
 const logger = require('../utils/logger');
 const { BRAND } = require('../templates/layout');
 

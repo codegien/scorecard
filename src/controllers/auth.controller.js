@@ -2,6 +2,8 @@ const User = require('../models/User.model');
 const api  = require('../utils/apiResponse')
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/AppError');
+const eventBus = require('../events/eventBus');
+const EVENTS   = require('../events/events');
 //reg
 
 const signToken = (id)=> jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
@@ -37,6 +39,13 @@ exports.login = async (req, res, next) => {
          const token = signToken(user._id, {lastLogin: new Date()});
 
          const {password: _, ...userData} = user.toJSON();
+
+    eventBus.emitSafe(EVENTS.USER_LOGGED_IN, {
+      user,
+      ip:     req.ip,
+      device: req.headers['user-agent'],
+    });
+
          api.success(res, {token, user: userData}, 'Login successful');
     }catch(err){
         next(err);

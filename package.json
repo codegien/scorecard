@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "chow chow server code",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
@@ -35,6 +36,7 @@
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0",
     "validator": "^13.15.15",
+    "winston": "^3.19.0",
     "yamljs": "^0.3.0"
   }
 }
